@@ -5,6 +5,7 @@ import com.example.market.model.ImportsJson;
 import com.example.market.model.Item;
 import com.example.market.repository.CategoryRepo;
 import com.example.market.repository.OfferRepo;
+import com.example.market.util.Types;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,8 +42,8 @@ public class ValidationService {
     }
 
     private void validateType(Item item) {
-        if (!item.getType().equals("CATEGORY") &&
-        !item.getType().equals("OFFER")) {
+        if (!item.getType().equals(Types.CATEGORY.toString()) &&
+        !item.getType().equals(Types.OFFER.toString())) {
             throw new IncorrectTypeException("'type' field is incorrect");
         }
     }
@@ -70,8 +71,11 @@ public class ValidationService {
 
     private void validatePrices(List<Item> items) {
         for (var item: items) {
-            if (item.getType().equals("OFFER") && item.getPrice() == null) {
-                throw new NullPriceException("offer's 'price' field can't be null");
+            validateType(item);
+            if (item.getType().equals(Types.OFFER.toString()) && item.getPrice() == null ||
+            item.getType().equals(Types.CATEGORY.toString()) && item.getPrice() != null ||
+            item.getType().equals(Types.OFFER.toString()) && item.getPrice() < 0) {
+                throw new IncorrectPriceException("'price' field is incorrect");
             }
         }
     }

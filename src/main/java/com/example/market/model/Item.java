@@ -4,6 +4,7 @@ import com.example.market.entity.CategoryEntity;
 import com.example.market.entity.CategoryVersion;
 import com.example.market.entity.OfferEntity;
 import com.example.market.entity.OfferVersion;
+import com.example.market.util.Types;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,32 +23,10 @@ public class Item {
     public Item() {
     }
 
-    private Long pricesSum(Item item) {
-        if (item.getType().equals("OFFER")) {
-            return item.getPrice();
-        }
-        long sum = 0;
-        for (var childItem: item.getChildren()) {
-            sum += pricesSum(childItem);
-        }
-        return sum;
-    }
-
-    private long offersNumber(Item item) {
-        if (item.getType().equals("OFFER")) {
-            return 1;
-        }
-        long number = 0;
-        for (var childItem: item.getChildren()) {
-            number += offersNumber(childItem);
-        }
-        return number;
-    }
-
     public Item(CategoryEntity category) {
         setId(category.getId());
         setName(category.getName());
-        setType("CATEGORY");
+        setType(Types.CATEGORY.toString());
         if (category.getParent() != null) {
             setParentId(category.getParent().getId());
         }
@@ -69,7 +48,7 @@ public class Item {
     public Item(OfferEntity offer) {
         setId(offer.getId());
         setName(offer.getName());
-        setType("OFFER");
+        setType(Types.OFFER.toString());
         if (offer.getParent() != null)
             setParentId(offer.getParent().getId());
         setDate(offer.getUpdateDate());
@@ -80,7 +59,7 @@ public class Item {
         setId(version.getId().getId());
         setName(version.getName());
         setDate(version.getUpdateDate());
-        setType("CATEGORY");
+        setType(Types.CATEGORY.toString());
         setParentId(version.getParentId());
         setPrice(version.getPrice());
     }
@@ -89,7 +68,7 @@ public class Item {
         setId(version.getId().getId());
         setName(version.getName());
         setDate(version.getUpdateDate());
-        setType("OFFER");
+        setType(Types.OFFER.toString());
         setParentId(version.getParentId());
         setPrice(version.getPrice());
     }

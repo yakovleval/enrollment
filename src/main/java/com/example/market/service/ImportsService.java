@@ -6,12 +6,14 @@ import com.example.market.entity.OfferEntity;
 import com.example.market.entity.OfferVersion;
 import com.example.market.exception.IncorrectDateException;
 import com.example.market.exception.IncorrectTypeException;
+import com.example.market.exception.InvalidParentException;
 import com.example.market.model.Item;
 import com.example.market.repository.CategoryRepo;
 import com.example.market.repository.CategoryVersionRepo;
 import com.example.market.repository.OfferRepo;
 import com.example.market.model.ImportsJson;
 import com.example.market.repository.OfferVersionRepo;
+import com.example.market.util.Types;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,16 +63,22 @@ public class ImportsService {
                 OfferEntity offer = offerRepo.findById(item.getId()).get();
                 updateParents(offer.getParent(), updateDate);
             }
-            CategoryEntity parent = item.getParentId() == null ? null :
-                    categoryRepo.findById(item.getParentId()).get();
-            if (item.getType().equals("CATEGORY")) {
+            CategoryEntity parent;
+            if (item.getParentId() == null)
+                parent = null;
+            else {
+                if (!categoryRepo.existsById(item.getParentId()))
+                    throw new InvalidParentException("'parent' field is invalid");
+                parent = categoryRepo.findById(item.getParentId()).get();
+            }
+            if (item.getType().equals(Types.CATEGORY.toString())) {
 //                addOrUpdateCategory(item, updateDate);
                 CategoryEntity newCategory = new CategoryEntity(item, parent, updateDate);
                 updateParents(newCategory.getParent(), updateDate);
                 categoryRepo.save(newCategory);
                 categoriesToUpdateAverage.add(newCategory);
             }
-            else if (item.getType().equals("OFFER")) {
+            else if (item.getType().equals(Types.OFFER.toString())) {
 //                addOrUpdateOffer(item, updateDate);
                 OfferEntity newOffer = new OfferEntity(item, parent, updateDate);
                 updateParents(newOffer.getParent(), updateDate);
