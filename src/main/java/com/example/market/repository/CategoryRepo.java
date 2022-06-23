@@ -4,7 +4,9 @@ import com.example.market.entity.CategoryEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface CategoryRepo extends CrudRepository<CategoryEntity, String> {
-//    CategoryEntity[] findByParentId(String parentid);
+    List<CategoryEntity> findAllByParentId(String parentId);
 }

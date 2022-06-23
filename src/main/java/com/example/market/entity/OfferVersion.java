@@ -5,13 +5,16 @@ import javax.persistence.*;
 @Entity
 @Table(name = "offerVersions")
 public class OfferVersion {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int number;
+
     @ManyToOne(targetEntity = OfferEntity.class)
     @JoinColumn(name = "id", referencedColumnName = "id")
     private OfferEntity id;
     @Column(nullable = false)
     private String name;
     @Column(name = "updateDate", nullable = false)
-    @Id
     private String updateDate;
     @Column(name = "parentId")
     private String parentId;

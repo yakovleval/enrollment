@@ -5,6 +5,7 @@ import com.example.market.model.Item;
 import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,6 +17,21 @@ public class CategoryEntity {
     private String name;
     @Transient
     private long pricesSum;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this)
+            return true;
+        if (obj == null || obj.getClass() != this.getClass())
+            return false;
+        CategoryEntity other = (CategoryEntity) obj;
+        return this.getId().equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 
     private long getPricesSum() {
         if (isAverageUpdated)
@@ -71,10 +87,9 @@ public class CategoryEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "id")
     private List<CategoryVersion> versions;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent")
-    private List<CategoryEntity> childCategories;
+    private List<CategoryEntity> childCategories = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent")
-    private List<OfferEntity> childOffers;
-
+    private List<OfferEntity> childOffers = new ArrayList<>();
     public CategoryEntity() {
     }
     public CategoryEntity(Item item, CategoryEntity parent, String updateDate) {

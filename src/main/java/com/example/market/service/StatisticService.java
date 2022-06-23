@@ -37,7 +37,7 @@ public class StatisticService {
             var versions = offerRepo.findById(id).get().getVersions();
             var itemsList = new ArrayList<Item>();
             for (var version: versions) {
-                var time = LocalDateTime.parse(version.getUpdateDate());
+                var time = LocalDateTime.parse(version.getUpdateDate(), formatter);
                 if (start.isBefore(time) && end.isAfter(time) || start.isEqual(time))
                     itemsList.add(new Item(version));
             }

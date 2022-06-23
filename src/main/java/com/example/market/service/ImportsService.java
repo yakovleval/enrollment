@@ -48,6 +48,7 @@ public class ImportsService {
             updateParents(category.getParent(), updateDate);
     }
 
+    @Transactional
     public void importItems(List<Item> items, String updateDate) {
         categoriesToUpdateAverage = new HashSet<>();
         offersToUpdateAverage = new HashSet<>();
@@ -81,6 +82,18 @@ public class ImportsService {
             }
         }
         for (var category: categoriesToUpdateAverage) {
+            String id = category.getId();
+            List<CategoryEntity> cats = categoryRepo.findAllByParentId(id);
+            List<OfferEntity> offers = offerRepo.findAllByParentId(id);
+            category.setChildCategories(cats);
+            category.setChildOffers(offers);
+            categoryRepo.save(category);
+        }
+        for (var category: categoriesToUpdateAverage) {
+
+            String id = category.getId();
+
+//            var c = categoryRepo.findById(id).get();
             CategoryVersion newCategoryVersion = new CategoryVersion(category);
             categoryVersionRepo.save(newCategoryVersion);
         }
