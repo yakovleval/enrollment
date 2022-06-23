@@ -34,8 +34,8 @@ public class StatisticController {
             return ResponseEntity.ok(new StatisticJson(items));
         }
         catch (DateTimeParseException | IncorrectIntervalException e) {
-//            return ResponseEntity.badRequest().body(new BadRequestJson());
-            throw e;
+            return ResponseEntity.badRequest().body(new BadRequestJson());
+//            throw e;
         }
         catch (IdDoesntExistException e) {
 //            throw new ItemNotFoundException();

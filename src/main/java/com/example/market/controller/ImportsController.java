@@ -27,8 +27,8 @@ public class ImportsController {
             importsService.importItems(items, updateDate);
             return ResponseEntity.ok("");
         } catch (Exception e) {
-            throw e;
-//            return ResponseEntity.badRequest().body(new BadRequestJson());
+//            throw e;
+            return ResponseEntity.badRequest().body(new BadRequestJson());
         }
     }
 }
