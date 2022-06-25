@@ -1,6 +1,8 @@
 package com.example.market.entity;
 
 import com.example.market.model.Item;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
@@ -81,6 +83,7 @@ public class CategoryEntity {
     @Column(name = "updateDate", nullable = false)
     private String updateDate;
     @ManyToOne(targetEntity = CategoryEntity.class)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "parentId", referencedColumnName = "id")
     private CategoryEntity parent;
 

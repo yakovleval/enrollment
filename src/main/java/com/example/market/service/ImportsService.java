@@ -49,8 +49,7 @@ public class ImportsService {
         if (category.getParent() != null)
             updateParents(category.getParent(), updateDate);
     }
-
-    @Transactional
+//    @Transactional
     public void importItems(List<Item> items, String updateDate) {
         categoriesToUpdateAverage = new HashSet<>();
         offersToUpdateAverage = new HashSet<>();

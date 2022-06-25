@@ -1,17 +1,23 @@
 package com.example.market.model;
 
 import com.example.market.entity.OfferEntity;
+import com.example.market.entity.OfferVersion;
+import com.example.market.repository.CategoryRepo;
 import com.example.market.repository.OfferRepo;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 
 public class SalesJson {
     private List<Item> items;
-    public SalesJson(Iterable<OfferEntity> offers, String date) {
+    public SalesJson(OfferRepo offerRepo, Iterable<OfferVersion> offers, String date) {
         items = new ArrayList<>();
+        Set<String> idsSet = new HashSet<>();
 //        var offers = offerRepo.findAll();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         LocalDateTime to = LocalDateTime.parse(date, formatter);
@@ -20,9 +26,14 @@ public class SalesJson {
             LocalDateTime current = LocalDateTime.parse(offer.getUpdateDate(), formatter);
             if (current.isAfter(from) &&
             current.isBefore(to) ||
-            current.isEqual(from)) {
-                items.add(new Item(offer));
+            current.isEqual(from) ||
+            current.isEqual(to)) {
+                idsSet.add(offer.getId().getId());
             }
+        }
+        for (var id: idsSet) {
+            var offer = offerRepo.findById(id).get();
+            items.add(new Item(offer));
         }
 //        items = items.toArray(new Item[0]);
     }

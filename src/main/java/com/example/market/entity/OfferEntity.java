@@ -1,6 +1,8 @@
 package com.example.market.entity;
 
 import com.example.market.model.Item;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,6 +20,7 @@ public class OfferEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "id")
     private List<OfferVersion> versions;
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne(targetEntity = CategoryEntity.class)
     @JoinColumn(name = "parentId", referencedColumnName = "id")
     private CategoryEntity parent;

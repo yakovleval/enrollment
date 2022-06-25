@@ -1,5 +1,8 @@
 package com.example.market.entity;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 
 @Entity
@@ -9,6 +12,7 @@ public class CategoryVersion {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int number;
 
+//    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne(targetEntity = CategoryEntity.class)
     @JoinColumn(name = "id", referencedColumnName = "id", nullable = false)
     private CategoryEntity id;

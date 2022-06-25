@@ -41,6 +41,13 @@ public class ValidationService {
         }
     }
 
+    private void validateTypeIsNotChanged(Item item) {
+        if (item.getType().equals(Types.CATEGORY.toString()) &&
+                offerRepo.existsById(item.getId()) ||
+        item.getType().equals(Types.OFFER.toString()) &&
+                categoryRepo.existsById(item.getId()))
+            throw new RuntimeException();
+    }
     private void validateType(Item item) {
         if (!item.getType().equals(Types.CATEGORY.toString()) &&
         !item.getType().equals(Types.OFFER.toString())) {
@@ -52,6 +59,7 @@ public class ValidationService {
         Set<String> ids = new HashSet<>();
         for (Item item: items) {
             validateType(item);
+            validateTypeIsNotChanged(item);
             if (ids.contains(item.getId())) {
                 throw new IdDuplicationException("'id' field is not unique");
             }
@@ -103,8 +111,6 @@ public class ValidationService {
         }
         return sorted;
     }
-
-
     public List<Item> validateAndSortImportsJson(ImportsJson json) {
         List<Item> items = json.getItems();
 
